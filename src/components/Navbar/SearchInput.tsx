@@ -8,8 +8,7 @@ const SearchInput: React.FC<SearchInputProps> = () => {
   return (
     <Flex
     flexGrow={1}
-    
-    mr={2}
+      mr={2}
     alignItems="center"
   >
     <InputGroup>
