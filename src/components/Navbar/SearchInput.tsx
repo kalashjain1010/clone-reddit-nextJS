@@ -9,7 +9,7 @@ const SearchInput: React.FC<SearchInputProps> = () => {
     <Flex
     flexGrow={1}
       mr={2}
-    alignItems="center"
+    align="center"
   >
     <InputGroup>
       <InputLeftElement
