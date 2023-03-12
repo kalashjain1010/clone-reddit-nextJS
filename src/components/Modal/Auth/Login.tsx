@@ -1,11 +1,30 @@
 import React, { useState } from "react";
 import { Button, Flex, Input, Text } from "@chakra-ui/react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { authModalState } from "@/atoms/authModalAtom";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/clientApp";
+import { FIREBASE_ERRORS } from "../../../firebase/errors";
 
 const Login: React.FC = () => {
+    
+    const setAuthModalState = useSetRecoilState(authModalState);
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
   });
+  const [
+    signInWithEmailAndPassword,
+    user,
+    loading,
+    error,
+  ] = useSignInWithEmailAndPassword(auth);
+
+  const onSubmit =(event: React.FormEvent<HTMLFormElement>) =>{
+    event.preventDefault();
+
+    signInWithEmailAndPassword(loginForm.email,loginForm.password)
+  }
 
   const onChange = (event:React.ChangeEvent<HTMLInputElement>)=>{
         setLoginForm(prev => ({
@@ -16,8 +35,9 @@ const Login: React.FC = () => {
   
 
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       <Input
+        
         required
         name="email"
         placeholder="email"
@@ -62,13 +82,18 @@ const Login: React.FC = () => {
         }}
         bg="gray.50"
       />
+
+      <Text textAlign={'center'} color="red" fontSize={'10pt'} >
+        {FIREBASE_ERRORS[error?.message as keyof typeof FIREBASE_ERRORS]}
+      </Text>
       <Button
+        
         width="100%"
         height="36px"
         mb={2}
         mt={2}
         type="submit"
-        // isLoading={loading}
+        isLoading={loading}
       >
         Log In
       </Button>
@@ -78,7 +103,12 @@ const Login: React.FC = () => {
           color="blue.500"
           fontWeight={700}
           cursor="pointer"
-        //   onClick={() => toggleView("signup")}
+          onClick={() =>
+             setAuthModalState((prev)=>({
+                ...prev,
+                view:"signup"
+             }))
+        }
         >
           SIGN UP
         </Text>
